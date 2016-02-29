@@ -306,7 +306,6 @@ bool MultiRigidNode::getDetectedObjects(simtrack_nodes::GetDetectionsRequest &re
       detection.pose = curr_pose_stamped;
 
       std::vector<double> bb_points = bounding_boxes.at(object_index);
-      std::cerr<<bb_points.size()<<std::endl;
       for (int r = 0; r < 8; r++) {
         geometry_msgs::Point p;
         p.x = bounding_boxes.at(object_index).at(r * 3);
@@ -315,7 +314,6 @@ bool MultiRigidNode::getDetectedObjects(simtrack_nodes::GetDetectionsRequest &re
         detection.bb_points.push_back(p);
       }
       res.detections.push_back(detection);
-      std::cerr<<objects_.at(object_index).label_<<std::endl;
     }
   }
   return true;
