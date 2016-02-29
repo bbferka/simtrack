@@ -217,7 +217,7 @@ bool MultiRigidNode::start() {
   switch_objects_srv_ = nh_.advertiseService(
       "/simtrack/switch_objects", &MultiRigidNode::switchObjects, this);
   detected_objs_srv_ = nh_.advertiseService(
-      "simtrack/get_detected_object",&MultiRigidNode::getDetectedObjects,this);
+      "simtrack/get_detected_objects",&MultiRigidNode::getDetectedObjects,this);
   bool compressed_streams = false;
   ros::param::get("simtrack/use_compressed_streams", compressed_streams);
 
