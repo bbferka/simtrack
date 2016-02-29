@@ -118,7 +118,7 @@ MultiRigidNode::MultiRigidNode(ros::NodeHandle nh)
           interface::MultiRigidTracker::OutputImageType::model_appearance),
       recording_(false), root_recording_path_("/dev/shm/"), frame_count_(0),
       recording_start_time_(ros::Time::now()), auto_disable_detector_(false),
-      color_only_mode_(false), switched_tracker_objects_(false) {
+      color_only_mode_(false), switched_tracker_objects_(false), frame_id_("") {
   // get model names from parameter server
   if (!ros::param::get("/simtrack/model_path", model_path_))
     throw std::runtime_error(
@@ -216,7 +216,8 @@ bool MultiRigidNode::start() {
 
   switch_objects_srv_ = nh_.advertiseService(
       "/simtrack/switch_objects", &MultiRigidNode::switchObjects, this);
-
+  detected_objs_srv_ = nh_.advertiseService(
+      "simtrack/get_detected_object",&MultiRigidNode::getDetectedObjects,this);
   bool compressed_streams = false;
   ros::param::get("simtrack/use_compressed_streams", compressed_streams);
 
@@ -285,6 +286,41 @@ bool MultiRigidNode::switchObjects(simtrack_nodes::SwitchObjectsRequest &req,
   return true;
 }
 
+bool MultiRigidNode::getDetectedObjects(simtrack_nodes::GetDetectionsRequest &req,
+                        simtrack_nodes::GetDetectionsResponse &res)
+{
+  std::vector<geometry_msgs::Pose> poses =
+      multi_rigid_tracker_->getPoseMessages();
+  std::vector<std::vector<double> > bounding_boxes =
+      multi_rigid_tracker_->getBoundingBoxesInCameraFrame();
+
+  for (int object_index = 0; object_index < poses.size(); object_index++) {
+    if (multi_rigid_tracker_->isPoseReliable(object_index)) {
+      simtrack_nodes::SimtrackDetection detection;
+      detection.model_name = objects_.at(object_index).label_;
+
+      geometry_msgs::PoseStamped curr_pose_stamped;
+      curr_pose_stamped.pose = poses.at(object_index);
+      curr_pose_stamped.header.frame_id = frame_id_;
+      curr_pose_stamped.header.stamp = stamp_;
+      detection.pose = curr_pose_stamped;
+
+      std::vector<double> bb_points = bounding_boxes.at(object_index);
+      std::cerr<<bb_points.size()<<std::endl;
+      for (int r = 0; r < 8; r++) {
+        geometry_msgs::Point p;
+        p.x = bounding_boxes.at(object_index).at(r * 3);
+        p.y = bounding_boxes.at(object_index).at(r * 3 + 1);
+        p.z = bounding_boxes.at(object_index).at(r * 3 + 2);
+        detection.bb_points.push_back(p);
+      }
+      res.detections.push_back(detection);
+      std::cerr<<objects_.at(object_index).label_<<std::endl;
+    }
+  }
+  return true;
+}
+
 void MultiRigidNode::depthAndColorCb(
     const sensor_msgs::ImageConstPtr &depth_msg,
     const sensor_msgs::ImageConstPtr &rgb_msg,
@@ -305,7 +341,8 @@ void MultiRigidNode::depthAndColorCb(
     ROS_ERROR("cv_bridge exception: %s", e.what());
     return;
   }
-
+  frame_id_= rgb_msg->header.frame_id;
+  stamp_ = cv_rgb_ptr->header.stamp;
   updatePose(cv_rgb_ptr, cv_depth_ptr, rgb_msg->header.frame_id);
 }
 
@@ -327,7 +364,8 @@ void MultiRigidNode::colorOnlyCb(
     ROS_ERROR("cv_bridge exception: %s", e.what());
     return;
   }
-
+  frame_id_= rgb_msg->header.frame_id;
+  stamp_ = cv_rgb_ptr->header.stamp;
   updatePose(cv_rgb_ptr, cv_depth_ptr, rgb_msg->header.frame_id);
 }
 

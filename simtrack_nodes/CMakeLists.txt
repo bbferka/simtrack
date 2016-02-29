@@ -24,10 +24,16 @@ generate_dynamic_reconfigure_options(
   cfg/Visualization.cfg
 )
 
+add_message_files(
+    FILES
+    SimtrackDetection.msg
+    )
+
 add_service_files(
   FILES
   SwitchCamera.srv
   SwitchObjects.srv
+  GetDetections.srv
 )
 
 generate_messages(

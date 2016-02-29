@@ -52,6 +52,7 @@
 #include <dynamic_reconfigure/server.h>
 #include <simtrack_nodes/VisualizationConfig.h>
 #include <simtrack_nodes/SwitchObjects.h>
+#include <simtrack_nodes/GetDetections.h>
 
 namespace simtrack {
 
@@ -66,6 +67,9 @@ public:
 private:
   bool switchObjects(simtrack_nodes::SwitchObjectsRequest &req,
                      simtrack_nodes::SwitchObjectsResponse &res);
+
+  bool getDetectedObjects(simtrack_nodes::GetDetectionsRequest &req,
+                          simtrack_nodes::GetDetectionsResponse &res);
 
   void depthAndColorCb(const sensor_msgs::ImageConstPtr &depth_msg,
                        const sensor_msgs::ImageConstPtr &rgb_msg,
@@ -138,6 +142,8 @@ private:
   int frame_count_;
   ros::Time recording_start_time_;
   cv::Mat camera_matrix_rgb_; // for recording purposes only
+  std::string frame_id_;
+  ros::Time  stamp_;
 
   struct RecordingFlags {
     RecordingFlags()
@@ -152,12 +158,13 @@ private:
 
   // Services
   ros::ServiceServer switch_objects_srv_;
-
+  ros::ServiceServer detected_objs_srv_;
   // Publishers
   boost::shared_ptr<image_transport::ImageTransport> debug_img_it_;
   image_transport::Publisher debug_img_pub_;
   tf::TransformBroadcaster tfb_;
   std::map<std::string, ros::Publisher> pose_publishers_;
+  
 
   // Subscriptions
   ros::Subscriber sub_detector_pose_;
