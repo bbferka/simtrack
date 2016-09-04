@@ -107,6 +107,7 @@ catkin_package(
     ${PROJECT_NAME}
     ${OGRE_OV_LIBRARIES_ABS}
     ${urdfdom_LIBRARIES}
+    ${OpenCV_LIBS}
   DEPENDS libx11-dev opengl libglew-dev cv_bridge orocos_kdl
   CATKIN_DEPENDS
     resource_retriever
