@@ -1,6 +1,5 @@
-/data/object_models/ros_fuerte/ros_fuerte_SIFT.h5
-/data/object_models/ros_groovy/ros_groovy_SIFT.h5
-/data/object_models/ros_hydro/ros_hydro_SIFT.h5
+*_SIFT.h5
+Ogre.log
 /simtrack/CMakeLists.txt.user*
 CMakeLists.txt.user*
 *~
