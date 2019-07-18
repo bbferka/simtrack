@@ -1,7 +1,7 @@
 SimTrack
 ========
 
-[SimTrack](http://www.karlpauwels.com/simtrack), a simulation-based framework for tracking, is a [ROS](http://www.ros.org/)-package for detecting and tracking the pose of multiple (textured) rigid objects in real-time. SimTrack is released under the [BSD-license](http://opensource.org/licenses/BSD-3-Clause). Please cite the following paper if you use SimTrack in your research:
+[SimTrack](http://www.karlpauwels.com/simtrack), a simulation-based framework for tracking, is a [ROS](http://www.ros.org/)-package for detecting and tracking the pose of multiple (textured) rigid objects in real-time. SimTrack is released under the [BSD-license](http://opensource.org/licenses/BSD-3-Clause). SimTrack uses SiftGPU for feature extraction. Note that SiftGPU has a different [license](siftgpu/license.txt). Please cite the following paper if you use SimTrack in your research:
 
 *Pauwels, Karl and Kragic, Danica (2015) [SimTrack: A Simulation-based Framework for Scalable Real-time Object Pose Detection and Tracking](http://www.karlpauwels.com/downloads/iros_2015/Pauwels_IROS_2015.pdf). IEEE/RSJ International Conference on Intelligent Robots and Systems, Hamburg, Germany, 2015.*
 
@@ -16,8 +16,8 @@ Please have a look at these example videos of SimTrack in action:
 System Requirements
 -------------------
 
-* Ubuntu 12.04 or 14.04
-* ROS Hydro or Indigo
+* Ubuntu 16.04 (use the indigo branch for Ubuntu 12.04 or 14.04)
+* Ros Kinetic (use the indigo branch for ROS Hydro or Indigo)
 * Monocular camera or RGB-D sensor (Asus Xtion, Primesense, Kinect v1 or Kinect v2)
 * Installed and working [NVIDIA CUDA](https://developer.nvidia.com/cuda-downloads) driver and toolkit (version 6.5 or above)
 * CUDA-capable Graphics Processing Unit (Fermi class or above)
@@ -27,6 +27,11 @@ System Requirements
 
 Installation
 ------------
+
+Source your ROS environment:
+```
+source /opt/ros/kinetic/setup.sh
+```
 
 Install wstool:
 ```
