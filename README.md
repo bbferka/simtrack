@@ -1,6 +1,8 @@
 SimTrack
 ========
 
+[![Build Status](https://travis-ci.com/karlpauwels/simtrack.svg?branch=master)](https://travis-ci.com/karlpauwels/simtrack)
+
 [SimTrack](http://www.karlpauwels.com/simtrack), a simulation-based framework for tracking, is a [ROS](http://www.ros.org/)-package for detecting and tracking the pose of multiple (textured) rigid objects in real-time. SimTrack is released under the [BSD-license](http://opensource.org/licenses/BSD-3-Clause). SimTrack uses SiftGPU for feature extraction. Note that SiftGPU has a different [license](siftgpu/license.txt). Please cite the following paper if you use SimTrack in your research:
 
 *Pauwels, Karl and Kragic, Danica (2015) [SimTrack: A Simulation-based Framework for Scalable Real-time Object Pose Detection and Tracking](http://www.karlpauwels.com/downloads/iros_2015/Pauwels_IROS_2015.pdf). IEEE/RSJ International Conference on Intelligent Robots and Systems, Hamburg, Germany, 2015.*
@@ -33,29 +35,23 @@ Source your ROS environment:
 source /opt/ros/kinetic/setup.sh
 ```
 
-Install wstool:
-```
-sudo apt-get install python-wstool
-```
-
 Create your workspace:
 ```
 mkdir -p ~/my-ws/src
 ```
 
-Copy the contents of [simtrack.rosinstall](simtrack.rosinstall) into a file ~/my-ws/src/.rosinstall
-
 Fetch the code:
 ```
 cd ~/my-ws/src
-wstool update
+git clone https://github.com/karlpauwels/simtrack.git
 ```
 
 Install the dependencies:
 ```
 cd ~/my-ws
 sudo rosdep init # only if never run before
-rosdep install --from-paths src --ignore-src
+rosdep update
+rosdep install --from-paths src --ignore-src -y -r
 ```
 
 Build:
